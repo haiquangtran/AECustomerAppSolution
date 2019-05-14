@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AE.CustomerApp.Domain.Models
 {
-    public class User
+    public class Customer
     {
     }
 }
