@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AE.CustomerApp.Infra.Data.Context;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +22,12 @@ namespace AE.CustomerApp.Api
         {
             services.AddDbContext<CustomerAppDbContext>(options => 
             {
-                options.UseSqlServer(Configuration.GetConnectionString("CustomerDbConnection"));
+                options.UseInMemoryDatabase(Configuration.GetConnectionString("CustomerInMemoryDb"));
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            RegisterServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +45,11 @@ namespace AE.CustomerApp.Api
 
             app.UseHttpsRedirection();
             app.UseMvc();
+        }
+
+        private static void RegisterServices(IServiceCollection services)
+        {
+            DependencyContainer.RegisterServices(services);
         }
     }
 }
