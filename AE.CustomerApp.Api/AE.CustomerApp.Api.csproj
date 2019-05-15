@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AE.CustomerApp.Data\AE.CustomerApp.Infra.Data.csproj" />
+    <ProjectReference Include="..\AE.CustomerApp.Infra.Data\AE.CustomerApp.Infra.Data.csproj" />
   </ItemGroup>
 
 </Project>

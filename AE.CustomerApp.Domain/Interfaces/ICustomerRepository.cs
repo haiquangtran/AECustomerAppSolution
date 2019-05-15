@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AE.CustomerApp.Domain.Interfaces
 {
-    interface ICustomerRepository
+    public interface ICustomerRepository
     {
         IEnumerable<Customer> GetCustomers();
     }

@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AE.CustomerApp.Domain", "AE.CustomerApp.Domain\AE.CustomerApp.Domain.csproj", "{A1C2FD7A-E723-4B47-BF9D-656666AC2495}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AE.CustomerApp.Infra.IoC", "AE.CustomerApp.Infra.IoC\AE.CustomerApp.Infra.IoC.csproj", "{BF823C92-A00A-44FA-89C9-C6FE36E4ABFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{A1C2FD7A-E723-4B47-BF9D-656666AC2495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1C2FD7A-E723-4B47-BF9D-656666AC2495}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1C2FD7A-E723-4B47-BF9D-656666AC2495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF823C92-A00A-44FA-89C9-C6FE36E4ABFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF823C92-A00A-44FA-89C9-C6FE36E4ABFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF823C92-A00A-44FA-89C9-C6FE36E4ABFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF823C92-A00A-44FA-89C9-C6FE36E4ABFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +58,7 @@ Global
 		{51AAF5CA-D3E6-4421-AC41-36F642AF6103} = {1C3E5A07-47C7-4AAC-A75B-28D92326CCF5}
 		{56F498B5-093C-4EA2-8000-04067CE903D0} = {7F9FF5F2-5812-46BB-990C-07F5ACEE8E43}
 		{A1C2FD7A-E723-4B47-BF9D-656666AC2495} = {12B0CFB5-00D5-4445-BC55-488A182CDEB6}
+		{BF823C92-A00A-44FA-89C9-C6FE36E4ABFB} = {530381C6-5F7B-473D-9532-C416D8545C74}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4789B585-75E5-498D-AD4A-65AFE4D0839C}

@@ -4,8 +4,4 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AE.CustomerApp.Domain\AE.CustomerApp.Domain.csproj" />
-  </ItemGroup>
-
 </Project>
