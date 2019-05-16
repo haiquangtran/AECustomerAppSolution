@@ -1,6 +1,8 @@
 ﻿using AE.CustomerApp.Core;
+using AE.CustomerApp.Core.Mappings;
 using AE.CustomerApp.Infra.Data.Context;
 using AE.CustomerApp.Infra.IoC;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -30,8 +32,8 @@ namespace AE.CustomerApp.Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             RegisterAppSettings(services);
-
             RegisterServices(services);
+            RegisterMappingProfiles(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,8 +53,11 @@ namespace AE.CustomerApp.Api
             app.UseMvc();
         }
 
+        #region Private methods
+
         private static void RegisterServices(IServiceCollection services)
         {
+            // Register services
             DependencyContainer.RegisterServices(services);
         }
 
@@ -63,5 +68,14 @@ namespace AE.CustomerApp.Api
             services.Configure<ConnectionStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppSettingsConfiguration>(Configuration.GetSection("AppSettings"));
         }
+
+        private void RegisterMappingProfiles(IServiceCollection services)
+        {
+            // Register mapping profiles
+            services.AddAutoMapper(typeof(DtoMappingProfile));
+        }
+
+        #endregion
+
     }
 }
