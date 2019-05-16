@@ -1,4 +1,6 @@
-﻿using AE.CustomerApp.Infra.Data.Context;
+﻿using AE.CustomerApp.Core;
+using AE.CustomerApp.Infra.Data.Context;
+using AE.CustomerApp.Infra.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -22,10 +24,12 @@ namespace AE.CustomerApp.Api
         {
             services.AddDbContext<CustomerAppDbContext>(options => 
             {
-                options.UseInMemoryDatabase(Configuration.GetConnectionString("CustomerInMemoryDb"));
+                options.UseInMemoryDatabase(Configuration.GetConnectionString(nameof(ConnectionStringConfiguration.CustomerInMemoryDb)));
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            RegisterAppSettings(services);
 
             RegisterServices(services);
         }
@@ -50,6 +54,14 @@ namespace AE.CustomerApp.Api
         private static void RegisterServices(IServiceCollection services)
         {
             DependencyContainer.RegisterServices(services);
+        }
+
+        private void RegisterAppSettings(IServiceCollection services)
+        {
+            // App settings configuration
+            services.AddOptions();
+            services.Configure<ConnectionStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
+            services.Configure<AppSettingsConfiguration>(Configuration.GetSection("AppSettings"));
         }
     }
 }
