@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AE.CustomerApp.Domain", "AE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AE.CustomerApp.Infra.IoC", "AE.CustomerApp.Infra.IoC\AE.CustomerApp.Infra.IoC.csproj", "{BF823C92-A00A-44FA-89C9-C6FE36E4ABFB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{E6127F67-9601-486F-95A6-22293CD6D79C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{E6127F67-9601-486F-95A6-22293CD6D79C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
