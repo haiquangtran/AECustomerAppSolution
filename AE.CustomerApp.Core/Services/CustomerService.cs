@@ -18,7 +18,8 @@ namespace AE.CustomerApp.Core.Services
         
         public IEnumerable<CustomerDto> GetCustomers()
         {
-            throw new NotImplementedException();
+
+            return _customerRepository.GetCustomers();
         }
     }
 }
