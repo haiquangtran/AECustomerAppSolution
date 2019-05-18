@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace AE.CustomerApp.Api
 {
@@ -31,6 +32,8 @@ namespace AE.CustomerApp.Api
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            // Register services
+            RegisterSwagger(services);
             RegisterAppSettings(services);
             RegisterServices(services);
             RegisterMappingProfiles(services);
@@ -51,6 +54,14 @@ namespace AE.CustomerApp.Api
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            // Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(config =>
+            {
+                const string apiVersion = "v1";
+                config.SwaggerEndpoint($"/swagger/{apiVersion}/swagger.json", $"AE Customer API {apiVersion}");
+            });
         }
 
         #region Private methods
@@ -73,6 +84,20 @@ namespace AE.CustomerApp.Api
         {
             // Register mapping profiles
             services.AddAutoMapper(typeof(DtoMappingProfile));
+        }
+
+        private void RegisterSwagger(IServiceCollection services)
+        {
+            // Register Swagger
+            services.AddSwaggerGen(config =>
+            {
+                config.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "AE Customer API",
+                    Description = "AE Customer API is a simple CRUD API for customers"
+                });
+            });
         }
 
         #endregion
