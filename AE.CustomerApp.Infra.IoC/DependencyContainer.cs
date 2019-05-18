@@ -1,8 +1,10 @@
 ﻿using AE.CustomerApp.Core;
 using AE.CustomerApp.Core.Interfaces;
+using AE.CustomerApp.Core.Mappings;
 using AE.CustomerApp.Core.Services;
 using AE.CustomerApp.Domain.Interfaces;
 using AE.CustomerApp.Infra.Data.Repository;
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,11 @@ namespace AE.CustomerApp.Infra.IoC
 
             // Infra.Data layer
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+        }
+
+        public static void RegisterMappingProfiles(IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(DtoMappingProfile));
         }
     }
 }

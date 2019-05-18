@@ -85,7 +85,7 @@ namespace AE.CustomerApp.Api
             DependencyContainer.RegisterServices(services);
 
             // Register mapping profiles
-            services.AddAutoMapper(typeof(DtoMappingProfile));
+            DependencyContainer.RegisterMappingProfiles(services);
         }
 
         #endregion
