@@ -15,6 +15,8 @@ namespace AE.CustomerApp.Api
 {
     public class Startup
     {
+        private const string ApiVersion = "v1";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,11 +34,18 @@ namespace AE.CustomerApp.Api
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // Register services
-            RegisterSwagger(services);
-            RegisterAppSettings(services);
-            RegisterServices(services);
-            RegisterMappingProfiles(services);
+            // Add Swagger
+            services.AddSwaggerGen(config =>
+            {
+                config.SwaggerDoc(ApiVersion, new Info
+                {
+                    Version = ApiVersion,
+                    Title = "AE Customer API",
+                    Description = "AE Customer API is a simple CRUD API for customers"
+                });
+            });
+
+            ConfigureDependencies(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,50 +63,29 @@ namespace AE.CustomerApp.Api
 
             app.UseHttpsRedirection();
             app.UseMvc();
-
+            
             // Swagger
             app.UseSwagger();
             app.UseSwaggerUI(config =>
             {
-                const string apiVersion = "v1";
-                config.SwaggerEndpoint($"/swagger/{apiVersion}/swagger.json", $"AE Customer API {apiVersion}");
+                config.SwaggerEndpoint($"/swagger/{ApiVersion}/swagger.json", $"AE Customer API {ApiVersion}");
             });
         }
 
         #region Private methods
 
-        private static void RegisterServices(IServiceCollection services)
-        {
-            // Register services
-            DependencyContainer.RegisterServices(services);
-        }
-
-        private void RegisterAppSettings(IServiceCollection services)
+        private void ConfigureDependencies(IServiceCollection services)
         {
             // App settings configuration
             services.AddOptions();
             services.Configure<ConnectionStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppSettingsConfiguration>(Configuration.GetSection("AppSettings"));
-        }
 
-        private void RegisterMappingProfiles(IServiceCollection services)
-        {
+            // Register services
+            DependencyContainer.RegisterServices(services);
+
             // Register mapping profiles
             services.AddAutoMapper(typeof(DtoMappingProfile));
-        }
-
-        private void RegisterSwagger(IServiceCollection services)
-        {
-            // Register Swagger
-            services.AddSwaggerGen(config =>
-            {
-                config.SwaggerDoc("v1", new Info
-                {
-                    Version = "v1",
-                    Title = "AE Customer API",
-                    Description = "AE Customer API is a simple CRUD API for customers"
-                });
-            });
         }
 
         #endregion
