@@ -7,6 +7,12 @@ namespace AE.CustomerApp.Core.Interfaces
 {
     public interface ICustomerService
     {
-        IEnumerable<CustomerDto> GetCustomers();
+        IEnumerable<CustomerReponseDto> GetCustomers();
+
+        CustomerReponseDto GetCustomer(int id);
+
+        void AddCustomer(CreateCustomerRequestDto customerRequestDto);
+
+        int SaveChanges();
     }
 }

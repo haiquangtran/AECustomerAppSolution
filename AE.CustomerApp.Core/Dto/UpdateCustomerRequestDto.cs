@@ -5,8 +5,7 @@ using System.Text;
 
 namespace AE.CustomerApp.Core.Dto
 {
-    public class CustomerDto
+    public class UpdateCustomerRequestDto : BaseCustomerRequestDto
     {
-        public IEnumerable<Customer> Customers { get; set; }
     }
 }

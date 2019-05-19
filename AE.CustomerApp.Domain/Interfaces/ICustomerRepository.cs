@@ -7,6 +7,12 @@ namespace AE.CustomerApp.Domain.Interfaces
 {
     public interface ICustomerRepository
     {
-        IEnumerable<Customer> GetCustomers();
+        Customer GetCustomer(int id);
+
+        IEnumerable<Customer> GetAllCustomers();
+
+        void AddCustomer(Customer customer);
+
+        int SaveChanges();
     }
 }

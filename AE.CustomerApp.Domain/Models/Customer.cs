@@ -7,7 +7,7 @@ using System.Text;
 namespace AE.CustomerApp.Domain.Models
 {
     [Table("Customer")]
-    public class Customer : BaseEntity
+    public class Customer : BaseDomainEntity
     {
         [Required]
         [StringLength(255)]

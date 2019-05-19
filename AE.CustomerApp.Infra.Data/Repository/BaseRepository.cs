@@ -1,6 +1,7 @@
 ﻿using AE.CustomerApp.Domain.Interfaces;
 using AE.CustomerApp.Domain.Models;
 using AE.CustomerApp.Infra.Data.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,48 +10,50 @@ using System.Text;
 
 namespace AE.CustomerApp.Infra.Data.Repository
 {
-    public abstract class BaseRepository<T> : IRepository<T> where T : class
+    public abstract class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private readonly CustomerAppDbContext _customerAppDbContext;
+        protected DbContext _dbContext { get; private set; }
+        protected DbSet<TEntity> _entities { get; private set; }
 
-        public BaseRepository(CustomerAppDbContext customerAppDbContext)
+        public BaseRepository(DbContext dbContext)
         {
-            _customerAppDbContext = customerAppDbContext;
+            _dbContext = dbContext;
+            _entities = _dbContext.Set<TEntity>();
         }
 
-        public void Add(T entity)
+        public virtual void Add(TEntity entity)
         {
-            throw new NotImplementedException();
+            _entities.Add(entity);
         }
 
-        public void Delete(T entity)
+        public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _entities.Where(predicate);
         }
 
-        public IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate)
+        public virtual TEntity Get(int id)
         {
-            throw new NotImplementedException();
+            return _entities.Find(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<TEntity> GetAll()
         {
-            throw new NotImplementedException();
+            return _entities;
         }
 
-        public T GetById(int id)
+        public virtual void Remove(TEntity entity)
         {
-            throw new NotImplementedException();
+            _entities.Remove(entity);
         }
 
-        public void Save()
+        public virtual void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            _entities.Update(entity);
         }
 
-        public void Update(T entity)
+        public virtual int Save()
         {
-            throw new NotImplementedException();
+            return _dbContext.SaveChanges();
         }
     }
 }

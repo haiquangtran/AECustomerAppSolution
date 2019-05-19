@@ -6,20 +6,20 @@ using System.Text;
 
 namespace AE.CustomerApp.Domain.Interfaces
 {
-    public interface IRepository<T> where T: class
+    public interface IRepository<TEntity> where TEntity : class
     {
-        IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate);
-        
-        IEnumerable<T> GetAll();
+        IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
+       
+        TEntity Get(int id);
 
-        T GetById(int id);
-        
-        void Add(T entity);
+        IEnumerable<TEntity> GetAll();
 
-        void Update(T entity);
+        void Add(TEntity entity);
 
-        void Delete(T entity);
+        void Update(TEntity entity);
 
-        void Save();
+        void Remove(TEntity entity);
+
+        int Save();
     }
 }

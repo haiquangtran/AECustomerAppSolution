@@ -12,7 +12,11 @@ namespace AE.CustomerApp.Core.Mappings
         public DtoMappingProfile()
         {
             // Map domain models to DTOs and map DTOs back to domain models
-            CreateMap<Customer, CustomerDto>().ReverseMap();
+            CreateMap<Customer, CustomerReponseDto>().ReverseMap();
+
+            // Map DTOs to domain models
+            CreateMap<CreateCustomerRequestDto, Customer>();
+            CreateMap<UpdateCustomerRequestDto, Customer>();
         }
     }
 }

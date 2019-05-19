@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AE.CustomerApp.Core;
 using AE.CustomerApp.Core.Constants;
 using AE.CustomerApp.Core.Dto;
+using AE.CustomerApp.Core.Interfaces;
+using AE.CustomerApp.Infra.IoC.Filters;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,46 +21,67 @@ namespace AE.CustomerApp.Api.Controllers
     [ApiController]
     public class CustomerController : BaseController
     {
-        public CustomerController(IMapper mapper, IOptions<AppSettingsConfiguration> appSettings) : base(mapper, appSettings)
+        private readonly ICustomerService _customerService;
+
+        public CustomerController(ICustomerService customerService, 
+            IMapper mapper, IOptions<AppSettingsConfiguration> appSettings) : base(mapper, appSettings)
         {
+            _customerService = customerService;
         }
 
         // GET: api/{version}/Customers
-        [HttpGet("Customers")]
+        [HttpGet("customers")]
+        [ValidateModelState]
         [SwaggerOperation(
             Summary = "Get all customers", 
             Description = "",
             OperationId = "GetAllCustomers", 
             Tags = new[] { "Customers" })]
-        [SwaggerResponse((int)HttpStatusCode.OK, "Returns all customers", typeof(IEnumerable<CustomerDto>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Returns all customers", typeof(IEnumerable<CustomerReponseDto>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Server error - cannot get customers")]
-        public IEnumerable<string> GetAllCustomers()
+        public IActionResult GetAllCustomers()
         {
-            return new string[] { "value1", "value2" };
+            // TODO: error handling
+
+            var customers = _customerService.GetCustomers();
+
+            return Ok(customers);
         }
 
-        // GET: api/Customer/5
-        [HttpGet("Customers/{id}")]
+        // GET: api/customer/5
+        [HttpGet("customer/{id}")]
+        [ValidateModelState]
         [SwaggerOperation(OperationId = "GetCustomer", Summary = "Get all customers")]
-        public string GetCustomer(int id)
+        public IActionResult GetCustomer(int id)
         {
-            return "value";
+            var customers = _customerService.GetCustomers();
+
+            return Ok(customers);
         }
 
-        // POST: api/Customer
-        [HttpPost]
-        public void Post([FromBody] string value)
+        // POST: api/customer
+        [HttpPost("customer")]
+        [ValidateModelState]
+        public IActionResult CreateCustomer([FromBody, Required] CreateCustomerRequestDto request)
         {
+            // TODO: error handling
+            _customerService.AddCustomer(request);
+
+            var result = _customerService.SaveChanges();
+           
+            return Ok(request);
         }
 
         // PUT: api/Customer/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [ValidateModelState]
+        public void UpdateCustomer(int id, [FromBody] string value)
         {
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
+        [ValidateModelState]
         public void Delete(int id)
         {
         }

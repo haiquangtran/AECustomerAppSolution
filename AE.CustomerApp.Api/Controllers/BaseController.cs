@@ -8,13 +8,13 @@ namespace AE.CustomerApp.Api.Controllers
     [Produces("application/json")]
     public abstract class BaseController : ControllerBase
     {
-        protected readonly IMapper Mapper;
-        protected readonly AppSettingsConfiguration AppSettings;
+        protected IMapper _mapper { get; private set; }
+        protected AppSettingsConfiguration _appSettings { get; private set; }
 
         public BaseController(IMapper mapper, IOptions<AppSettingsConfiguration> appSettings)
         {
-            Mapper = mapper;
-            AppSettings = appSettings.Value;
+            _mapper = mapper;
+            _appSettings = appSettings.Value;
         }
     }
 }
