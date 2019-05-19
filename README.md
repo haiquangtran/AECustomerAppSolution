@@ -7,6 +7,8 @@ A simple CRUD Customer API that allows:
 - Deleting customers
 - Searching for a customer by partial name match (first or last name)
 
+**Swagger Url:** https://localhost:{portnumber}/swagger/index.html
+
 **Note**: It uses EF Core In Memory database for convenience but ideally this should be only used for testing purposes. 
 
 ## Developer Requirements
@@ -19,6 +21,7 @@ A simple CRUD Customer API that allows:
 - Ensure that the solution builds successfully by rebuilding the solution. selecting  Build > Rebuild.
 - Set the startup project to be AE.CustomerApp.API 
 - Run the project (either in debug mode or without). To run in debug mode press F5, otherwise, press Ctrl + F5 to run without debug mode.
+- Navigate to the URL: https://localhost:{portNumber}/swagger where portNumber is the localhost port number i.e. https://localhost:44312/swagger
 
 ## Technology Stack
 - ASP.NET Core 2.2 API
