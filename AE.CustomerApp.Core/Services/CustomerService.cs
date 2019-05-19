@@ -9,11 +9,13 @@ namespace AE.CustomerApp.Core.Services
 {
     public class CustomerService : ICustomerService
     {
+        private readonly IMapper _mapper;
         private readonly ICustomerRepository _customerRepository;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository, IMapper mapper)
         {
             _customerRepository = customerRepository;
+            _mapper = mapper;
         }
 
         public IEnumerable<Customer> GetCustomers()
@@ -28,7 +30,7 @@ namespace AE.CustomerApp.Core.Services
 
         public Customer AddCustomer(CreateCustomerRequestDto customerRequest)
         {
-            var customer = Mapper.Map<CreateCustomerRequestDto, Customer>(customerRequest);
+            var customer = _mapper.Map<CreateCustomerRequestDto, Customer>(customerRequest);
 
             _customerRepository.AddCustomer(customer);
             SaveChanges();

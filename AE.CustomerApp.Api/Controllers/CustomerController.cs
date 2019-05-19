@@ -40,7 +40,7 @@ namespace AE.CustomerApp.Api.Controllers
         {
             var customers = _customerService.GetCustomers();
 
-            var result = Mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(customers);
+            var result = _mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(customers);
             return Ok(result);
         }
 
@@ -59,7 +59,7 @@ namespace AE.CustomerApp.Api.Controllers
         {
             var customers = _customerService.FindCustomers(name);
 
-            var result = Mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(customers);
+            var result = _mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(customers);
             return Ok(result);
         }
 
@@ -82,7 +82,7 @@ namespace AE.CustomerApp.Api.Controllers
             if (customer == null)
                 return NoContent();
 
-            var result = Mapper.Map<Customer, CustomerDto>(customer);
+            var result = _mapper.Map<Customer, CustomerDto>(customer);
             return Ok(result);
         }
 
@@ -103,7 +103,7 @@ namespace AE.CustomerApp.Api.Controllers
             var customer = _customerService.AddCustomer(request);
             var customerApiRoute = $"{ApiConstants.ApiBaseRoute}/customer/{customer.Id}";
 
-            var result = Mapper.Map<Customer, CustomerDto>(customer);
+            var result = _mapper.Map<Customer, CustomerDto>(customer);
             return Created(customerApiRoute, result);
         }
 
@@ -130,7 +130,7 @@ namespace AE.CustomerApp.Api.Controllers
 
             var updatedCustomer = _customerService.UpdateCustomer(customer, request);
 
-            var result = Mapper.Map<Customer, CustomerDto>(updatedCustomer);
+            var result = _mapper.Map<Customer, CustomerDto>(updatedCustomer);
             return Ok(result);
         }
 
