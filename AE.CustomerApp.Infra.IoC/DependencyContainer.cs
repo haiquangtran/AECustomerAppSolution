@@ -25,6 +25,9 @@ namespace AE.CustomerApp.Infra.IoC
 
         public static void RegisterMappingProfiles(IServiceCollection services)
         {
+            // Setup Mapping profiles
+            Mapper.Initialize(config => config.AddProfile<DtoMappingProfile>());
+
             services.AddAutoMapper(typeof(DtoMappingProfile));
         }
     }
