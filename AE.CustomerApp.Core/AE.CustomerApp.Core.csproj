@@ -12,8 +12,4 @@
     <ProjectReference Include="..\AE.CustomerApp.Domain\AE.CustomerApp.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Constants\" />
-  </ItemGroup>
-
 </Project>

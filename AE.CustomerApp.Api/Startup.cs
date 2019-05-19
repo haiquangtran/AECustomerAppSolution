@@ -1,8 +1,7 @@
 ﻿using AE.CustomerApp.Core;
-using AE.CustomerApp.Core.Mappings;
+using AE.CustomerApp.Core.Constants;
 using AE.CustomerApp.Infra.Data.Context;
 using AE.CustomerApp.Infra.IoC;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -10,13 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace AE.CustomerApp.Api
 {
     public class Startup
     {
-        private const string ApiVersion = "v1";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -34,15 +34,24 @@ namespace AE.CustomerApp.Api
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // Add Swagger
+            // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(config =>
             {
-                config.SwaggerDoc(ApiVersion, new Info
+                config.SwaggerDoc(ApiConstants.ApiVersion.Current, new Info
                 {
-                    Version = ApiVersion,
-                    Title = "AE Customer API",
-                    Description = "AE Customer API is a simple CRUD API for customers"
+                    Version = ApiConstants.ApiVersion.Current,
+                    Title = ApiConstants.ApiTitle,
+                    Description = ApiConstants.ApiDescription
                 });
+
+                // Xml file generated to use for Swagger comments
+                var swaggerXmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.XML";
+                var swaggerXmlFilePath = Path.Combine(AppContext.BaseDirectory, swaggerXmlFile);
+                // Enable Swagger to use Xml Comments
+                config.IncludeXmlComments(swaggerXmlFilePath);
+
+                // Enable Swagger Annotations
+                config.EnableAnnotations();
             });
 
             ConfigureDependencies(services);
@@ -68,7 +77,7 @@ namespace AE.CustomerApp.Api
             app.UseSwagger();
             app.UseSwaggerUI(config =>
             {
-                config.SwaggerEndpoint($"/swagger/{ApiVersion}/swagger.json", $"AE Customer API {ApiVersion}");
+                config.SwaggerEndpoint($"/swagger/{ApiConstants.ApiVersion.Current}/swagger.json", $"AE Customer API {ApiConstants.ApiVersion.Current}");
             });
         }
 
