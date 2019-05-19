@@ -3,9 +3,7 @@ using AE.CustomerApp.Core.Interfaces;
 using AE.CustomerApp.Domain.Interfaces;
 using AE.CustomerApp.Domain.Models;
 using AutoMapper;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AE.CustomerApp.Core.Services
 {
@@ -61,6 +59,11 @@ namespace AE.CustomerApp.Core.Services
         private int SaveChanges()
         {
             return _customerRepository.SaveChanges();
+        }
+
+        public IEnumerable<Customer> FindCustomers(string name)
+        {
+            return _customerRepository.FindCustomers(name);
         }
 
         #endregion

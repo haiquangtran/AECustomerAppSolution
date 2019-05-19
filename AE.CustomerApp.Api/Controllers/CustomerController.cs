@@ -44,6 +44,25 @@ namespace AE.CustomerApp.Api.Controllers
             return Ok(result);
         }
 
+        // GET: api/v1/searchCustomers?{name}
+        [HttpGet("searchCustomers")]
+        [ValidateModelState]
+        [SwaggerOperation(
+            Summary = "Search customers by partial name match (first or last name)",
+            Description = "",
+            OperationId = "SearchCustomersByName",
+            Tags = new[] { "Customers" })]
+        [SwaggerResponse((int)HttpStatusCode.OK, "Returns customers with the matched name", typeof(CustomerDto))]
+        [SwaggerResponse((int)HttpStatusCode.NoContent, "Cannot find customers that match the name")]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Server error - cannot search customers by name")]
+        public IActionResult FindCustomersByName([FromQuery, Required, SwaggerParameter("Name of customer")] string name)
+        {
+            var customers = _customerService.FindCustomers(name);
+
+            var result = Mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(customers);
+            return Ok(result);
+        }
+
         // GET: api/v1/customer/5
         [HttpGet("customer/{id}")]
         [ValidateModelState]

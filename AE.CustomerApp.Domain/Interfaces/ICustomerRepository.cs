@@ -11,6 +11,8 @@ namespace AE.CustomerApp.Domain.Interfaces
 
         IEnumerable<Customer> GetAllCustomers();
 
+        IEnumerable<Customer> FindCustomers(string name);
+
         void AddCustomer(Customer customer);
 
         void UpdateCustomer(Customer customer);

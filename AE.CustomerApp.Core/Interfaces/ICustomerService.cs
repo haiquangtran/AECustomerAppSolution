@@ -10,6 +10,8 @@ namespace AE.CustomerApp.Core.Interfaces
     {
         IEnumerable<Customer> GetCustomers();
 
+        IEnumerable<Customer> FindCustomers(string name);
+
         Customer GetCustomer(int id);
 
         Customer AddCustomer(CreateCustomerRequestDto customerRequestDto);
