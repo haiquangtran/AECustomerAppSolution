@@ -30,7 +30,6 @@ A simple CRUD Customer API that allows:
 ## Future Extensions (if time permits)
 - Currently uses In Memory database for convenience. In memory database should only be used for testing purposes, therefore, should not be used in future.
 - Logging needs to be added to the solution, this can be added to the Global exception handler.
-- Unit tests and integration tests need to be written.
-- Api versioning of the application. Added basic api versioning. 
+- Unit tests and integration tests need to be written.application.
 - Add Health check endpoint to check the health of the API.
 - Add custom API Exceptions and exception handling for easier debugging and more detailed information.
