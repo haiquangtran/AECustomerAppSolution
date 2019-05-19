@@ -13,6 +13,10 @@ namespace AE.CustomerApp.Domain.Interfaces
 
         void AddCustomer(Customer customer);
 
+        void UpdateCustomer(Customer customer);
+
+        void Remove(Customer customer);
+
         int SaveChanges();
     }
 }

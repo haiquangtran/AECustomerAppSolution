@@ -2,6 +2,7 @@
 using AE.CustomerApp.Core.Constants;
 using AE.CustomerApp.Infra.Data.Context;
 using AE.CustomerApp.Infra.IoC;
+using AE.CustomerApp.Infra.IoC.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,10 @@ namespace AE.CustomerApp.Api
                 options.UseInMemoryDatabase(Configuration.GetConnectionString(nameof(ConnectionStringConfiguration.CustomerInMemoryDb)));
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options => 
+            {
+                options.Filters.Add(typeof(ValidateModelStateAttribute));
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(config =>
@@ -47,8 +51,10 @@ namespace AE.CustomerApp.Api
                 // Xml file generated to use for Swagger comments
                 var swaggerXmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.XML";
                 var swaggerXmlFilePath = Path.Combine(AppContext.BaseDirectory, swaggerXmlFile);
+                var swaggerModelXmlFilePath = Path.Combine(AppContext.BaseDirectory, "AE.CustomerApp.Core.xml");
                 // Enable Swagger to use Xml Comments
                 config.IncludeXmlComments(swaggerXmlFilePath);
+                config.IncludeXmlComments(swaggerModelXmlFilePath);
 
                 // Enable Swagger Annotations
                 config.EnableAnnotations();
@@ -60,16 +66,15 @@ namespace AE.CustomerApp.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
+            if (!env.IsDevelopment())
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
+            // Set up global exception handler
+            GlobalExceptionHandler.SetupGlobalExceptionHandler(app);
+            
             app.UseHttpsRedirection();
             app.UseMvc();
             
@@ -89,6 +94,7 @@ namespace AE.CustomerApp.Api
             services.AddOptions();
             services.Configure<ConnectionStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppSettingsConfiguration>(Configuration.GetSection("AppSettings"));
+            services.AddSingleton(Configuration);
 
             // Register services
             DependencyContainer.RegisterServices(services);

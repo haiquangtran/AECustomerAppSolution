@@ -17,31 +17,53 @@ namespace AE.CustomerApp.Core.Services
         {
             _customerRepository = customerRepository;
         }
-        
-        public IEnumerable<CustomerReponseDto> GetCustomers()
+
+        public IEnumerable<Customer> GetCustomers()
         {
-            var customers = _customerRepository.GetAllCustomers();
-            var customerDtos = Mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerReponseDto>>(customers);
-            return customerDtos;
+            return _customerRepository.GetAllCustomers();
         }
 
-        public CustomerReponseDto GetCustomer(int id)
+        public Customer GetCustomer(int id)
         {
-            var customer = _customerRepository.GetCustomer(id);
-            var customerDto = Mapper.Map<Customer, CustomerReponseDto>(customer);
-            return customerDto;
+            return _customerRepository.GetCustomer(id);
         }
 
-        public void AddCustomer(CreateCustomerRequestDto customerRequest)
+        public Customer AddCustomer(CreateCustomerRequestDto customerRequest)
         {
             var customer = Mapper.Map<CreateCustomerRequestDto, Customer>(customerRequest);
 
             _customerRepository.AddCustomer(customer);
+            SaveChanges();
+
+            return customer;
+        }
+        
+        public Customer UpdateCustomer(Customer customer, UpdateCustomerRequestDto customerDto)
+        {
+            // Update fields
+            var updatedCustomer = Mapper.Map(customerDto, customer);
+
+            _customerRepository.UpdateCustomer(updatedCustomer);
+            SaveChanges();
+
+            return updatedCustomer;
         }
 
-        public int SaveChanges()
+        public void RemoveCustomer(Customer customer)
+        {
+            _customerRepository.Remove(customer);
+
+            SaveChanges();
+        }
+
+        #region Private methods
+
+        private int SaveChanges()
         {
             return _customerRepository.SaveChanges();
         }
+
+        #endregion
+
     }
 }

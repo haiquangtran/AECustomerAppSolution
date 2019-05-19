@@ -1,4 +1,5 @@
 ﻿using AE.CustomerApp.Core.Dto;
+using AE.CustomerApp.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,12 +8,14 @@ namespace AE.CustomerApp.Core.Interfaces
 {
     public interface ICustomerService
     {
-        IEnumerable<CustomerReponseDto> GetCustomers();
+        IEnumerable<Customer> GetCustomers();
 
-        CustomerReponseDto GetCustomer(int id);
+        Customer GetCustomer(int id);
 
-        void AddCustomer(CreateCustomerRequestDto customerRequestDto);
+        Customer AddCustomer(CreateCustomerRequestDto customerRequestDto);
 
-        int SaveChanges();
+        Customer UpdateCustomer(Customer customer, UpdateCustomerRequestDto customerRequestDto);
+
+        void RemoveCustomer(Customer customer);
     }
 }

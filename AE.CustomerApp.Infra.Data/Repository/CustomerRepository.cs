@@ -1,11 +1,8 @@
 ﻿using AE.CustomerApp.Domain.Interfaces;
 using AE.CustomerApp.Domain.Models;
 using AE.CustomerApp.Infra.Data.Context;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AE.CustomerApp.Infra.Data.Repository
 {
@@ -36,6 +33,15 @@ namespace AE.CustomerApp.Infra.Data.Repository
             Add(customer);
         }
 
+        public void UpdateCustomer(Customer customer)
+        {
+            // Update date
+            customer.SetUpdatedDate();
+            // Add
+            Update(customer);
+        }
+
+        // TODO: move to unit of work
         public int SaveChanges()
         {
             return Save();

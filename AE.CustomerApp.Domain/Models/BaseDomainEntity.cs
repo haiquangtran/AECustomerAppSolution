@@ -10,7 +10,7 @@ namespace AE.CustomerApp.Domain.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual int Id { get; set; }
-        
+
         [Required]
         public virtual DateTime CreatedDate { get; set; }
 
