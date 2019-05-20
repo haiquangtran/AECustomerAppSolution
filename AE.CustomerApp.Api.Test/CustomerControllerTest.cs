@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace AE.CustomerApp.Api.Test
@@ -58,7 +59,7 @@ namespace AE.CustomerApp.Api.Test
 
         [Trait("CustomerController", "GetCustomers")]
         [Fact(DisplayName = "Get Customers Returns Multiple Customers")]
-        public void CustomerControllerTest_GetCustomers_ReturnMultipleCustomers()
+        public void CustomerControllerTest_GetCustomers_ReturnsMultipleCustomers()
         {
             // Arrange
             var expectedResult = new List<CustomerDto>() {
@@ -71,7 +72,7 @@ namespace AE.CustomerApp.Api.Test
 
             // Act
             var test = customerController.GetCustomers();
-            
+
             // Assert
             var result = test as OkObjectResult;
             var customers = Assert.IsType<List<CustomerDto>>(result.Value);
@@ -94,7 +95,7 @@ namespace AE.CustomerApp.Api.Test
             var result = Assert.IsType<NoContentResult>(test);
             Assert.Equal(expectedStatusCode, result.StatusCode);
         }
-        
+
         [Trait("CustomerController", "GetCustomerById")]
         [Fact(DisplayName = "Customer found by id returns 200 response")]
         public void CustomerControllerTest_GetCustomerById_CustomerFound_Returns200Response()
@@ -114,7 +115,7 @@ namespace AE.CustomerApp.Api.Test
             Assert.Equal(expectedStatusCode, result.StatusCode);
         }
 
-        [Trait("CustomerController", "GetCustomerById")]
+        [Trait("CustomerController", "searchCustomers")]
         [Fact(DisplayName = "GetCustomerById calls GetCustomer from Customer Repository")]
         public void CustomerControllerTest_GetCustomerById_CallsGetCustomerFromCustomerRepository()
         {
@@ -129,5 +130,74 @@ namespace AE.CustomerApp.Api.Test
             _customerService.Verify(m => m.GetCustomer(It.IsAny<int>()), Times.Once());
         }
 
+        [Trait("CustomerController", "FindCustomersByName")]
+        [Fact(DisplayName = "FindCustomersByName returns 200 response when no customers found")]
+        public void CustomerControllerTest_SearchCustomers_NoCustomerFound_Returns200Response()
+        {
+            // Arrange
+            const int expectedStatusCode = StatusCodes.Status200OK;
+            var searchName = "Bob";
+            _mapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
+             .Returns(new List<CustomerDto>() {});
+            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+
+            // Act
+            var test = customerController.FindCustomersByName(searchName);
+
+            // Assert
+            var result = Assert.IsType<OkObjectResult>(test);
+            var customers = Assert.IsType<List<CustomerDto>>(result.Value);
+
+            Assert.Equal(expectedStatusCode, result.StatusCode);
+            Assert.False(customers.Any());
+        }
+
+        [Trait("CustomerController", "FindCustomersByName")]
+        [Fact(DisplayName = "FindCustomersByName returns 200 response when customer found")]
+        public void CustomerControllerTest_FindCustomersByName_CustomerFound_Returns200Response()
+        {
+            // Arrange
+            const int expectedStatusCode = StatusCodes.Status200OK;
+            var searchName = "Bob";
+            _customerService.Setup(c => c.FindCustomers(It.IsAny<string>()))
+                .Returns(new List<Customer>() {
+                    new Customer()
+                    {
+                        FirstName = searchName
+                    }
+                });
+            _mapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
+                .Returns(new List<CustomerDto>() {
+                    new CustomerDto()
+                    {
+                        FirstName = searchName
+                    }
+                });
+            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+
+            // Act
+            var test = customerController.FindCustomersByName(searchName);
+
+            // Assert
+            var result = Assert.IsType<OkObjectResult>(test);
+            var customers = Assert.IsType<List<CustomerDto>>(result.Value);
+            Assert.Equal(expectedStatusCode, result.StatusCode);
+            Assert.True(customers.Any());
+        }
+
+        [Trait("CustomerController", "FindCustomersByName")]
+        [Fact(DisplayName = "FindCustomersByName calls FindCustomers from Customer Repository")]
+        public void CustomerControllerTest_FindCustomersByName_CallsFindCustomersFromCustomerRepository()
+        {
+            // Arrange
+            var searchName = "Bob";
+            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+
+            // Act
+            var test = customerController.FindCustomersByName(searchName);
+
+            // Assert
+            _customerService.Verify(m => m.FindCustomers(It.IsAny<string>()), Times.Once());
+        }
     }
 }
