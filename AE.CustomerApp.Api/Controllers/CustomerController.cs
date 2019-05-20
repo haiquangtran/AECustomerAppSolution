@@ -53,7 +53,6 @@ namespace AE.CustomerApp.Api.Controllers
             OperationId = "SearchCustomersByName",
             Tags = new[] { "Customers" })]
         [SwaggerResponse((int)HttpStatusCode.OK, "Returns customers with the matched name", typeof(CustomerDto))]
-        [SwaggerResponse((int)HttpStatusCode.NoContent, "Cannot find customers that match the name")]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Server error - cannot search customers by name")]
         public IActionResult FindCustomersByName([FromQuery, Required, SwaggerParameter("Name of customer")] string name)
         {
