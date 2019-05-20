@@ -36,7 +36,7 @@ namespace AE.CustomerApp.Api.Controllers
             Tags = new[] { "Customers" })]
         [SwaggerResponse((int)HttpStatusCode.OK, "Returns all customers", typeof(IEnumerable<CustomerDto>))]
         [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Server error - cannot get customers")]
-        public IActionResult GetAllCustomers()
+        public IActionResult GetCustomers()
         {
             var customers = _customerService.GetCustomers();
 
