@@ -4,6 +4,7 @@ using AE.CustomerApp.Core.Dto;
 using AE.CustomerApp.Core.Interfaces;
 using AE.CustomerApp.Domain.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -25,23 +26,25 @@ namespace AE.CustomerApp.Api.Test
             _appSettings = Options.Create(new AppSettingsConfiguration());
         }
 
-        [Trait("CustomerController", "Get Customers")]
+        [Trait("CustomerController", "GetCustomers")]
         [Fact(DisplayName = "Get Customers Returns 200 Response")]
-        public void CustomerControllerTest_GetCustomers_ShouldReturn200Response()
+        public void CustomerControllerTest_GetCustomers_Returns200Response()
         {
             // Arrange
+            const int expectedStatusCode = StatusCodes.Status200OK;
             var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
 
             // Act
             var test = customerController.GetCustomers();
 
             // Assert
-            var viewResult = Assert.IsType<OkObjectResult>(test);
+            var result = Assert.IsType<OkObjectResult>(test);
+            Assert.Equal(expectedStatusCode, result.StatusCode);
         }
 
-        [Trait("CustomerController", "Get Customers")]
+        [Trait("CustomerController", "GetCustomers")]
         [Fact(DisplayName = "Get Customers Calls Get From Customer Repository")]
-        public void CustomerControllerTest_GetCustomers_ShouldCallGetFromCustomerRepository()
+        public void CustomerControllerTest_GetCustomers_CallsGetFromCustomerRepository()
         {
             // Arrange
             var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
@@ -53,9 +56,9 @@ namespace AE.CustomerApp.Api.Test
             _customerService.Verify(m => m.GetCustomers(), Times.Once());
         }
 
-        [Trait("CustomerController", "Get Customers")]
+        [Trait("CustomerController", "GetCustomers")]
         [Fact(DisplayName = "Get Customers Returns Multiple Customers")]
-        public void CustomerControllerTest_GetCustomers_ShouldReturnMultipleCustomers()
+        public void CustomerControllerTest_GetCustomers_ReturnMultipleCustomers()
         {
             // Arrange
             var expectedResult = new List<CustomerDto>() {
@@ -75,6 +78,56 @@ namespace AE.CustomerApp.Api.Test
             Assert.Equal(expectedResult.Count, customers.Count);
         }
 
+        [Trait("CustomerController", "GetCustomerById")]
+        [Fact(DisplayName = "No customer found by id returns 204 response")]
+        public void CustomerControllerTest_GetCustomerById_NoCustomerFound_Returns204Response()
+        {
+            // Arrange
+            const int expectedStatusCode = StatusCodes.Status204NoContent;
+            var id = 1;
+            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+
+            // Act
+            var test = customerController.GetCustomerById(id);
+
+            // Assert
+            var result = Assert.IsType<NoContentResult>(test);
+            Assert.Equal(expectedStatusCode, result.StatusCode);
+        }
+        
+        [Trait("CustomerController", "GetCustomerById")]
+        [Fact(DisplayName = "Customer found by id returns 200 response")]
+        public void CustomerControllerTest_GetCustomerById_CustomerFound_Returns200Response()
+        {
+            // Arrange
+            const int expectedStatusCode = StatusCodes.Status200OK;
+            var id = 1;
+            _customerService.Setup(c => c.GetCustomer(It.IsAny<int>())).Returns(new Customer());
+            _mapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>())).Returns(new CustomerDto());
+            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+
+            // Act
+            var test = customerController.GetCustomerById(id);
+
+            // Assert
+            var result = Assert.IsType<OkObjectResult>(test);
+            Assert.Equal(expectedStatusCode, result.StatusCode);
+        }
+
+        [Trait("CustomerController", "GetCustomerById")]
+        [Fact(DisplayName = "GetCustomerById calls GetCustomer from Customer Repository")]
+        public void CustomerControllerTest_GetCustomerById_CallsGetCustomerFromCustomerRepository()
+        {
+            // Arrange
+            var id = 1;
+            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+
+            // Act
+            var test = customerController.GetCustomerById(id);
+
+            // Assert
+            _customerService.Verify(m => m.GetCustomer(It.IsAny<int>()), Times.Once());
+        }
 
     }
 }
