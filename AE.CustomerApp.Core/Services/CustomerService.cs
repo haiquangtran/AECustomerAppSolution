@@ -41,7 +41,7 @@ namespace AE.CustomerApp.Core.Services
         public Customer UpdateCustomer(Customer customer, UpdateCustomerRequestDto customerDto)
         {
             // Update fields
-            var updatedCustomer = Mapper.Map(customerDto, customer);
+            var updatedCustomer = _mapper.Map(customerDto, customer);
 
             _customerRepository.UpdateCustomer(updatedCustomer);
             SaveChanges();

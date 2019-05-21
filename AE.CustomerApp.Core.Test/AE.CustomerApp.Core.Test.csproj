@@ -14,4 +14,8 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AE.CustomerApp.Core\AE.CustomerApp.Core.csproj" />
+  </ItemGroup>
+
 </Project>
