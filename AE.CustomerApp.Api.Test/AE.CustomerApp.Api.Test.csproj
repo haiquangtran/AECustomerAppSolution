@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.6.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Moq" Version="4.10.1" />
     <PackageReference Include="xunit" Version="2.4.0" />
@@ -16,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AE.CustomerApp.Api\AE.CustomerApp.Api.csproj" />
     <ProjectReference Include="..\AE.CustomerApp.Core\AE.CustomerApp.Core.csproj" />
+    <ProjectReference Include="..\AE.CustomerApp.Infra.IoC\AE.CustomerApp.Infra.IoC.csproj" />
   </ItemGroup>
 
 </Project>
