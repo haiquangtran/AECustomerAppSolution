@@ -16,19 +16,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace AE.CustomerApp.Api.Test
+namespace AE.CustomerApp.Api.Test.Controllers
 {
     public class CustomerControllerTest
     {
-        private IOptions<AppSettingsConfiguration> _appSettings;
-        private Mock<ICustomerService> _customerService;
-        private Mock<IMapper> _mapper;
+        private IOptions<AppSettingsConfiguration> _fakeAppSettings;
+        private Mock<ICustomerService> _fakeCustomerService;
+        private Mock<IMapper> _fakeMapper;
 
         public CustomerControllerTest()
         {
-            _customerService = new Mock<ICustomerService>();
-            _mapper = new Mock<IMapper>();
-            _appSettings = Options.Create(new AppSettingsConfiguration());
+            _fakeCustomerService = new Mock<ICustomerService>();
+            _fakeMapper = new Mock<IMapper>();
+            _fakeAppSettings = Options.Create(new AppSettingsConfiguration());
         }
 
         #region GetCustomers Tests
@@ -39,7 +39,7 @@ namespace AE.CustomerApp.Api.Test
         {
             // Arrange
             const int expectedStatusCode = StatusCodes.Status200OK;
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.GetCustomers();
@@ -54,13 +54,13 @@ namespace AE.CustomerApp.Api.Test
         public void CustomerControllerTest_GetCustomers_CallsGetFromCustomerRepository()
         {
             // Arrange
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.GetCustomers();
 
             // Assert
-            _customerService.Verify(m => m.GetCustomers(), Times.Once());
+            _fakeCustomerService.Verify(m => m.GetCustomers(), Times.Once());
         }
 
         [Trait("CustomerController", "GetCustomers")]
@@ -72,9 +72,9 @@ namespace AE.CustomerApp.Api.Test
                 new CustomerDto() { Id = 1 },
                 new CustomerDto() { Id = 2 },
             };
-            _mapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
+            _fakeMapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
                 .Returns(expectedResult);
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.GetCustomers();
@@ -96,7 +96,7 @@ namespace AE.CustomerApp.Api.Test
             // Arrange
             const int expectedStatusCode = StatusCodes.Status204NoContent;
             var fakeId = 1;
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.GetCustomerById(fakeId);
@@ -113,9 +113,9 @@ namespace AE.CustomerApp.Api.Test
             // Arrange
             const int expectedStatusCode = StatusCodes.Status200OK;
             var fakeId = 1;
-            _customerService.Setup(c => c.GetCustomer(It.IsAny<int>())).Returns(new Customer());
-            _mapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>())).Returns(new CustomerDto());
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>())).Returns(new Customer());
+            _fakeMapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>())).Returns(new CustomerDto());
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.GetCustomerById(fakeId);
@@ -131,13 +131,13 @@ namespace AE.CustomerApp.Api.Test
         {
             // Arrange
             var fakeId = 1;
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.GetCustomerById(fakeId);
 
             // Assert
-            _customerService.Verify(m => m.GetCustomer(It.IsAny<int>()), Times.Once());
+            _fakeCustomerService.Verify(m => m.GetCustomer(It.IsAny<int>()), Times.Once());
         }
 
         #endregion GetCustomerById Tests
@@ -151,9 +151,9 @@ namespace AE.CustomerApp.Api.Test
             // Arrange
             const int expectedStatusCode = StatusCodes.Status200OK;
             var searchName = "Bob";
-            _mapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
+            _fakeMapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
              .Returns(new List<CustomerDto>() {});
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.FindCustomersByName(searchName);
@@ -173,21 +173,21 @@ namespace AE.CustomerApp.Api.Test
             // Arrange
             const int expectedStatusCode = StatusCodes.Status200OK;
             var fakeName = "Bob";
-            _customerService.Setup(c => c.FindCustomers(It.IsAny<string>()))
+            _fakeCustomerService.Setup(c => c.FindCustomers(It.IsAny<string>()))
                 .Returns(new List<Customer>() {
                     new Customer()
                     {
                         FirstName = fakeName
                     }
                 });
-            _mapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
+            _fakeMapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
                 .Returns(new List<CustomerDto>() {
                     new CustomerDto()
                     {
                         FirstName = fakeName
                     }
                 });
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.FindCustomersByName(fakeName);
@@ -205,13 +205,13 @@ namespace AE.CustomerApp.Api.Test
         {
             // Arrange
             var fakeName = "Bob";
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.FindCustomersByName(fakeName);
 
             // Assert
-            _customerService.Verify(m => m.FindCustomers(It.IsAny<string>()), Times.Once());
+            _fakeCustomerService.Verify(m => m.FindCustomers(It.IsAny<string>()), Times.Once());
         }
 
         #endregion FindCustomersByName Tests
@@ -234,11 +234,11 @@ namespace AE.CustomerApp.Api.Test
             };
             var fakeResponse = new CustomerDto() { Id = expectedId };
             var fakeCustomer = new Customer() { Id = expectedId };
-            _customerService.Setup(c => c.AddCustomer(It.IsAny<CreateCustomerRequestDto>()))
+            _fakeCustomerService.Setup(c => c.AddCustomer(It.IsAny<CreateCustomerRequestDto>()))
                 .Returns(fakeCustomer);
-            _mapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>()))
+            _fakeMapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>()))
                .Returns(fakeResponse);
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.CreateCustomer(fakeRequest);
@@ -274,15 +274,15 @@ namespace AE.CustomerApp.Api.Test
                 FirstName = "fakeFirstName",
                 LastName = "fakeLastName"
             };
-            _customerService.Setup(c => c.AddCustomer(It.IsAny<CreateCustomerRequestDto>()))
+            _fakeCustomerService.Setup(c => c.AddCustomer(It.IsAny<CreateCustomerRequestDto>()))
                .Returns(new Customer());
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.CreateCustomer(fakeRequest);
 
             // Assert
-            _customerService.Verify(m => m.AddCustomer(It.IsAny<CreateCustomerRequestDto>()), Times.Once());
+            _fakeCustomerService.Verify(m => m.AddCustomer(It.IsAny<CreateCustomerRequestDto>()), Times.Once());
         }
 
         #endregion CreateCustomer Tests
@@ -302,9 +302,9 @@ namespace AE.CustomerApp.Api.Test
                 FirstName = "fakeFirstName",
                 LastName = "fakeLastName"
             };
-            _customerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
+            _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
                 .Returns((Customer)null);
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.UpdateCustomer(expectedId, fakeRequest);
@@ -329,13 +329,13 @@ namespace AE.CustomerApp.Api.Test
             };
             var fakeResponse = new CustomerDto() { Id = expectedId };
             var fakeCustomer = new Customer() { Id = expectedId };
-            _customerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
+            _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
                 .Returns(fakeCustomer);
-            _customerService.Setup(c => c.UpdateCustomer(It.IsAny<Customer>(), It.IsAny<UpdateCustomerRequestDto>()))
+            _fakeCustomerService.Setup(c => c.UpdateCustomer(It.IsAny<Customer>(), It.IsAny<UpdateCustomerRequestDto>()))
                 .Returns(fakeCustomer);
-            _mapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>()))
+            _fakeMapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>()))
                .Returns(fakeResponse);
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.UpdateCustomer(expectedId, fakeRequest);
@@ -372,21 +372,78 @@ namespace AE.CustomerApp.Api.Test
                 LastName = "fakeLastName"
             };
             var fakeCustomer = new Customer();
-            _customerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
+            _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
                 .Returns(fakeCustomer);
-            _customerService.Setup(c => c.UpdateCustomer(It.IsAny<Customer>(), It.IsAny<UpdateCustomerRequestDto>()))
+            _fakeCustomerService.Setup(c => c.UpdateCustomer(It.IsAny<Customer>(), It.IsAny<UpdateCustomerRequestDto>()))
                .Returns(fakeCustomer);
-            var customerController = new CustomerController(_customerService.Object, _mapper.Object, _appSettings);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
             var test = customerController.UpdateCustomer(fakeId, fakeUpdateRequest);
 
             // Assert
-            _customerService.Verify(m => m.UpdateCustomer(It.IsAny<Customer>(), It.IsAny<UpdateCustomerRequestDto>()), Times.Once());
+            _fakeCustomerService.Verify(m => m.UpdateCustomer(It.IsAny<Customer>(), It.IsAny<UpdateCustomerRequestDto>()), Times.Once());
         }
 
         #endregion
 
+        #region DeleteCustomer Tests
 
+        [Trait("CustomerController", "DeleteCustomer")]
+        [Fact(DisplayName = "DeleteCustomer cant find customer and returns not found 404 response")]
+        public void CustomerControllerTest_DeleteCustomer_NoFoundCustomer_Returns404Response()
+        {
+            // Arrange
+            var expectedStatusCode = StatusCodes.Status404NotFound;
+            var fakeId = 1;
+            _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
+                .Returns((Customer)null);
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
+
+            // Act
+            var test = customerController.DeleteCustomer(fakeId);
+
+            // Assert
+            var result = Assert.IsType<NotFoundResult>(test);
+            Assert.Equal(expectedStatusCode, result.StatusCode);
+        }
+
+        [Trait("CustomerController", "DeleteCustomer")]
+        [Fact(DisplayName = "DeleteCustomer succeeded returns no content 204 Response")]
+        public void CustomerControllerTest_DeleteCustomer_ValidDeletedCustomer_ReturnsNoContent204Response()
+        {
+            // Arrange
+            var expectedStatusCode = StatusCodes.Status204NoContent;
+            var fakeId = 1;
+            _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
+                .Returns(new Customer());
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
+
+            // Act
+            var test = customerController.DeleteCustomer(fakeId);
+
+            // Assert
+            var result = Assert.IsType<NoContentResult>(test);
+            Assert.Equal(expectedStatusCode, result.StatusCode);
+        }
+
+        [Trait("CustomerController", "DeleteCustomer")]
+        [Fact(DisplayName = "DeleteCustomer calls RemoveCustomer from Customer Repository")]
+        public void CustomerControllerTest_DeleteCustomer_ValidDeletedCustomer_CallsRemoveCustomerFromCustomerRepository()
+        {
+            // Arrange
+            var fakeId = 1;
+            _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
+               .Returns(new Customer() { Id = fakeId });
+            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
+
+            // Act
+            var test = customerController.DeleteCustomer(fakeId);
+
+            // Assert
+            _fakeCustomerService.Verify(m => m.RemoveCustomer(It.IsAny<Customer>()), Times.Once());
+        }
+
+        #endregion
     }
 }
