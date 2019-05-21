@@ -44,8 +44,8 @@ namespace AE.CustomerApp.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/v1/searchCustomers?{name}
-        [HttpGet("searchCustomers")]
+        // GET: api/v1/customer/searchCustomers?{name}
+        [HttpGet("customer/searchCustomers")]
         [ValidateModelState]
         [SwaggerOperation(
             Summary = "Search customers by partial name match (first or last name)",
@@ -134,7 +134,7 @@ namespace AE.CustomerApp.Api.Controllers
         }
 
         // DELETE: api/v1/customer/5
-        [HttpDelete("{id}")]
+        [HttpDelete("customer/{id}")]
         [ValidateModelState]
         [SwaggerOperation(
             Summary = "Delete customer",
