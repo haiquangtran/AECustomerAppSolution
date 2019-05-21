@@ -15,6 +15,13 @@ A simple CRUD Customer API that allows:
 - .NET Core 2.2
 - Visual Studio 2017 (Recommended)
 
+## Technology Stack
+- ASP.NET Core 2.2 API
+- Entity Framework Core (In memory database)
+- XUnit, Moq
+- Swagger/OpenAPI support
+- Dependency Injection
+
 ## Set up (using Visual Studio)
 - Clone the repository
 - In Visual Studio, locate the folder and open the AECustomerAppSolution.sln file in Visual Studio
@@ -23,17 +30,9 @@ A simple CRUD Customer API that allows:
 - Run the project (either in debug mode or without). To run in debug mode press F5, otherwise, press Ctrl + F5 to run without debug mode.
 - Navigate to the URL: https://localhost:{portNumber}/swagger where portNumber is the localhost port number i.e. https://localhost:44312/swagger
 
-## Technology Stack
-- ASP.NET Core 2.2 API
-- Entity Framework Core (In memory database)
-- XUnit, Moq
-- Swagger/OpenAPI support
-- Dependency Injection
-
 ## Future Extensions (if time permits)
 - Currently uses In Memory database for convenience. In memory database should only be used for testing purposes, therefore, should not be used in future.
 - Logging needs to be added to the solution, this can be added to the Global exception handler.
-- Integration tests need to be written.
-- Fine grained validation fields i.e. minDate and maxDate validation on DOB.
+- Integration tests
 - Add Health check endpoint to check the health of the API.
-- Add custom API Exceptions and exception handling for easier debugging and more detailed information.
+- Add custom API Exceptions and custom exception handling for easier debugging and more detailed information.
