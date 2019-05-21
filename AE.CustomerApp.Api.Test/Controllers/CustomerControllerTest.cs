@@ -23,12 +23,14 @@ namespace AE.CustomerApp.Api.Test.Controllers
         private IOptions<AppSettingsConfiguration> _fakeAppSettings;
         private Mock<ICustomerService> _fakeCustomerService;
         private Mock<IMapper> _fakeMapper;
+        private CustomerController _customerController;
 
         public CustomerControllerTest()
         {
             _fakeCustomerService = new Mock<ICustomerService>();
             _fakeMapper = new Mock<IMapper>();
             _fakeAppSettings = Options.Create(new AppSettingsConfiguration());
+            _customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
         }
 
         #region GetCustomers Tests
@@ -39,25 +41,21 @@ namespace AE.CustomerApp.Api.Test.Controllers
         {
             // Arrange
             const int expectedStatusCode = StatusCodes.Status200OK;
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.GetCustomers();
+            var test = _customerController.GetCustomers();
 
             // Assert
-            var result = Assert.IsType<OkObjectResult>(test);
-            Assert.Equal(expectedStatusCode, result.StatusCode);
+            var mockResult = Assert.IsType<OkObjectResult>(test);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
         }
 
         [Trait("CustomerController", "GetCustomers")]
         [Fact(DisplayName = "Get Customers Calls Get From Customer Repository")]
         public void CustomerControllerTest_GetCustomers_CallsGetFromCustomerRepository()
         {
-            // Arrange
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
-
             // Act
-            var test = customerController.GetCustomers();
+            var test = _customerController.GetCustomers();
 
             // Assert
             _fakeCustomerService.Verify(m => m.GetCustomers(), Times.Once());
@@ -74,15 +72,14 @@ namespace AE.CustomerApp.Api.Test.Controllers
             };
             _fakeMapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
                 .Returns(expectedResult);
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.GetCustomers();
+            var test = _customerController.GetCustomers();
 
             // Assert
-            var result = test as OkObjectResult;
-            var customers = Assert.IsType<List<CustomerDto>>(result.Value);
-            Assert.Equal(expectedResult.Count, customers.Count);
+            var mockResult = test as OkObjectResult;
+            var mockCustomers = Assert.IsType<List<CustomerDto>>(mockResult.Value);
+            Assert.Equal(expectedResult.Count, mockCustomers.Count);
         }
 
         #endregion GetCustomers Tests
@@ -96,14 +93,13 @@ namespace AE.CustomerApp.Api.Test.Controllers
             // Arrange
             const int expectedStatusCode = StatusCodes.Status204NoContent;
             var fakeId = 1;
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.GetCustomerById(fakeId);
+            var test = _customerController.GetCustomerById(fakeId);
 
             // Assert
-            var result = Assert.IsType<NoContentResult>(test);
-            Assert.Equal(expectedStatusCode, result.StatusCode);
+            var mockResult = Assert.IsType<NoContentResult>(test);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
         }
 
         [Trait("CustomerController", "GetCustomerById")]
@@ -115,14 +111,13 @@ namespace AE.CustomerApp.Api.Test.Controllers
             var fakeId = 1;
             _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>())).Returns(new Customer());
             _fakeMapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>())).Returns(new CustomerDto());
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.GetCustomerById(fakeId);
+            var test = _customerController.GetCustomerById(fakeId);
 
             // Assert
-            var result = Assert.IsType<OkObjectResult>(test);
-            Assert.Equal(expectedStatusCode, result.StatusCode);
+            var mockResult = Assert.IsType<OkObjectResult>(test);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
         }
 
         [Trait("CustomerController", "GetCustomerById")]
@@ -131,10 +126,9 @@ namespace AE.CustomerApp.Api.Test.Controllers
         {
             // Arrange
             var fakeId = 1;
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.GetCustomerById(fakeId);
+            var test = _customerController.GetCustomerById(fakeId);
 
             // Assert
             _fakeCustomerService.Verify(m => m.GetCustomer(It.IsAny<int>()), Times.Once());
@@ -150,20 +144,18 @@ namespace AE.CustomerApp.Api.Test.Controllers
         {
             // Arrange
             const int expectedStatusCode = StatusCodes.Status200OK;
-            var searchName = "Bob";
+            var fakeSearchName = "Bob";
             _fakeMapper.Setup(m => m.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(It.IsAny<IEnumerable<Customer>>()))
              .Returns(new List<CustomerDto>() {});
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.FindCustomersByName(searchName);
+            var test = _customerController.FindCustomersByName(fakeSearchName);
 
             // Assert
-            var result = Assert.IsType<OkObjectResult>(test);
-            var customers = Assert.IsType<List<CustomerDto>>(result.Value);
-
-            Assert.Equal(expectedStatusCode, result.StatusCode);
-            Assert.False(customers.Any());
+            var mockResult = Assert.IsType<OkObjectResult>(test);
+            var mockCustomers = Assert.IsType<List<CustomerDto>>(mockResult.Value);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
+            Assert.False(mockCustomers.Any());
         }
 
         [Trait("CustomerController", "FindCustomersByName")]
@@ -187,16 +179,15 @@ namespace AE.CustomerApp.Api.Test.Controllers
                         FirstName = fakeName
                     }
                 });
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.FindCustomersByName(fakeName);
+            var test = _customerController.FindCustomersByName(fakeName);
 
             // Assert
-            var result = Assert.IsType<OkObjectResult>(test);
-            var customers = Assert.IsType<List<CustomerDto>>(result.Value);
-            Assert.Equal(expectedStatusCode, result.StatusCode);
-            Assert.True(customers.Any());
+            var mockResult = Assert.IsType<OkObjectResult>(test);
+            var mockCustomers = Assert.IsType<List<CustomerDto>>(mockResult.Value);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
+            Assert.True(mockCustomers.Any());
         }
 
         [Trait("CustomerController", "FindCustomersByName")]
@@ -205,10 +196,9 @@ namespace AE.CustomerApp.Api.Test.Controllers
         {
             // Arrange
             var fakeName = "Bob";
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.FindCustomersByName(fakeName);
+            var test = _customerController.FindCustomersByName(fakeName);
 
             // Assert
             _fakeCustomerService.Verify(m => m.FindCustomers(It.IsAny<string>()), Times.Once());
@@ -238,18 +228,17 @@ namespace AE.CustomerApp.Api.Test.Controllers
                 .Returns(fakeCustomer);
             _fakeMapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>()))
                .Returns(fakeResponse);
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.CreateCustomer(fakeRequest);
+            var test = _customerController.CreateCustomer(fakeRequest);
 
             // Assert
-            var result = Assert.IsType<CreatedResult>(test);
-            var customer = Assert.IsType<CustomerDto>(result.Value);
-            Assert.Equal(expectedStatusCode, result.StatusCode);
-            Assert.NotNull(customer);
-            Assert.Equal(expectedId, customer.Id);
-            Assert.Equal(expectedRoute, result.Location);
+            var mockResult = Assert.IsType<CreatedResult>(test);
+            var mockCustomer = Assert.IsType<CustomerDto>(mockResult.Value);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
+            Assert.NotNull(mockCustomer);
+            Assert.Equal(expectedId, mockCustomer.Id);
+            Assert.Equal(expectedRoute, mockResult.Location);
         }
         
         [Trait("CustomerController", "CreateCustomer")]
@@ -276,10 +265,9 @@ namespace AE.CustomerApp.Api.Test.Controllers
             };
             _fakeCustomerService.Setup(c => c.AddCustomer(It.IsAny<CreateCustomerRequestDto>()))
                .Returns(new Customer());
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.CreateCustomer(fakeRequest);
+            var test = _customerController.CreateCustomer(fakeRequest);
 
             // Assert
             _fakeCustomerService.Verify(m => m.AddCustomer(It.IsAny<CreateCustomerRequestDto>()), Times.Once());
@@ -304,14 +292,13 @@ namespace AE.CustomerApp.Api.Test.Controllers
             };
             _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
                 .Returns((Customer)null);
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.UpdateCustomer(expectedId, fakeRequest);
+            var test = _customerController.UpdateCustomer(expectedId, fakeRequest);
 
             // Assert
-            var result = Assert.IsType<NotFoundResult>(test);
-            Assert.Equal(expectedStatusCode, result.StatusCode);
+            var mockResult = Assert.IsType<NotFoundResult>(test);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
         }
 
         [Trait("CustomerController", "UpdateCustomer")]
@@ -335,17 +322,16 @@ namespace AE.CustomerApp.Api.Test.Controllers
                 .Returns(fakeCustomer);
             _fakeMapper.Setup(m => m.Map<Customer, CustomerDto>(It.IsAny<Customer>()))
                .Returns(fakeResponse);
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.UpdateCustomer(expectedId, fakeRequest);
+            var test = _customerController.UpdateCustomer(expectedId, fakeRequest);
 
             // Assert
-            var result = Assert.IsType<OkObjectResult>(test);
-            var customer = Assert.IsType<CustomerDto>(result.Value);
-            Assert.Equal(expectedStatusCode, result.StatusCode);
-            Assert.NotNull(customer);
-            Assert.Equal(expectedId, customer.Id);
+            var mockResult = Assert.IsType<OkObjectResult>(test);
+            var mockCustomer = Assert.IsType<CustomerDto>(mockResult.Value);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
+            Assert.NotNull(mockCustomer);
+            Assert.Equal(expectedId, mockCustomer.Id);
         }
         
         [Trait("CustomerController", "UpdateCustomer")]
@@ -376,10 +362,9 @@ namespace AE.CustomerApp.Api.Test.Controllers
                 .Returns(fakeCustomer);
             _fakeCustomerService.Setup(c => c.UpdateCustomer(It.IsAny<Customer>(), It.IsAny<UpdateCustomerRequestDto>()))
                .Returns(fakeCustomer);
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.UpdateCustomer(fakeId, fakeUpdateRequest);
+            var test = _customerController.UpdateCustomer(fakeId, fakeUpdateRequest);
 
             // Assert
             _fakeCustomerService.Verify(m => m.UpdateCustomer(It.IsAny<Customer>(), It.IsAny<UpdateCustomerRequestDto>()), Times.Once());
@@ -398,14 +383,13 @@ namespace AE.CustomerApp.Api.Test.Controllers
             var fakeId = 1;
             _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
                 .Returns((Customer)null);
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.DeleteCustomer(fakeId);
+            var test = _customerController.DeleteCustomer(fakeId);
 
             // Assert
-            var result = Assert.IsType<NotFoundResult>(test);
-            Assert.Equal(expectedStatusCode, result.StatusCode);
+            var mockResult = Assert.IsType<NotFoundResult>(test);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
         }
 
         [Trait("CustomerController", "DeleteCustomer")]
@@ -417,14 +401,13 @@ namespace AE.CustomerApp.Api.Test.Controllers
             var fakeId = 1;
             _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
                 .Returns(new Customer());
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.DeleteCustomer(fakeId);
+            var test = _customerController.DeleteCustomer(fakeId);
 
             // Assert
-            var result = Assert.IsType<NoContentResult>(test);
-            Assert.Equal(expectedStatusCode, result.StatusCode);
+            var mockResult = Assert.IsType<NoContentResult>(test);
+            Assert.Equal(expectedStatusCode, mockResult.StatusCode);
         }
 
         [Trait("CustomerController", "DeleteCustomer")]
@@ -435,10 +418,9 @@ namespace AE.CustomerApp.Api.Test.Controllers
             var fakeId = 1;
             _fakeCustomerService.Setup(c => c.GetCustomer(It.IsAny<int>()))
                .Returns(new Customer() { Id = fakeId });
-            var customerController = new CustomerController(_fakeCustomerService.Object, _fakeMapper.Object, _fakeAppSettings);
 
             // Act
-            var test = customerController.DeleteCustomer(fakeId);
+            var test = _customerController.DeleteCustomer(fakeId);
 
             // Assert
             _fakeCustomerService.Verify(m => m.RemoveCustomer(It.IsAny<Customer>()), Times.Once());
