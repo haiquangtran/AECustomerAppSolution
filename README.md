@@ -54,7 +54,7 @@ A simple CRUD Customer API that allows:
 ### Run the tests with dotnet CLI
 - open command line, navigate to solution directory
 - build the solution by typing in ``dotnet build``, ensure the build is successful
-- To run the tests by typing ``dotnet run``
+- To run the tests, use the following command ``dotnet run``
 - Tests should now be run
 - For more informaton see the following url: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test?tabs=netcore20
 
