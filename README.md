@@ -22,6 +22,11 @@ A simple CRUD Customer API that allows:
 - Swagger/OpenAPI support
 - Dependency Injection
 
+## Design patterns used
+- Uses Clean Architecture (https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- Dependency Injection
+- SOLID principles
+
 ## Set up (using Visual Studio)
 - Clone the repository
 - In Visual Studio, locate the folder and open the AECustomerAppSolution.sln file in Visual Studio
@@ -33,6 +38,5 @@ A simple CRUD Customer API that allows:
 ## Future Extensions (if time permits)
 - Currently uses In Memory database for convenience. In memory database should only be used for testing purposes, therefore, should not be used in future.
 - Logging needs to be added to the solution, this can be added to the Global exception handler.
-- Integration tests
 - Add Health check endpoint to check the health of the API.
 - Add custom API Exceptions and custom exception handling for easier debugging and more detailed information.
