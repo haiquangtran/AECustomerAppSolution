@@ -58,7 +58,7 @@ A simple CRUD Customer API that allows:
 - Tests should now be run
 - For more informaton see the following url: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test?tabs=netcore20
 
-## Future Extensions (if time permits)
+## Future Extensions
 - Currently uses In Memory database for convenience. In memory database should only be used for testing purposes, therefore, should not be used in future.
 - Logging needs to be added to the solution, this can be added to the Global exception handler.
 - Add Health check endpoint to check the health of the API.
